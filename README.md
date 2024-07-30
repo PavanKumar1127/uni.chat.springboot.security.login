@@ -1,3 +1,63 @@
+Project Overview
+This project is a Spring Boot application integrated with Spring Security and JSON Web Token (JWT) for authentication and authorization. The application provides the following functionalities:
+
+User Registration and Login:
+
+Users can sign up for new accounts or log in using their username and password.
+Based on the user's role (admin, moderator, user), access to various resources is controlled.
+Security Configuration:
+
+WebSecurityConfig: The core of our security implementation, configuring CORS, CSRF, session management, and access rules for protected resources. This configuration can be customized and extended as needed.
+Note: WebSecurityConfigurerAdapter is deprecated from Spring 2.7.0. For more information and updates, refer to the official Spring documentation.
+User Details Service:
+
+The UserDetailsService interface loads user data by username and returns a UserDetails object containing necessary information (username, password, authorities) for authentication and validation.
+Authentication Process:
+
+UsernamePasswordAuthenticationToken: Captures the username and password from the login request, which the AuthenticationManager uses to authenticate the user.
+AuthenticationManager: Utilizes DaoAuthenticationProvider, UserDetailsService, and PasswordEncoder to validate the credentials and return a fully populated Authentication object, including granted authorities.
+Token Handling:
+
+OncePerRequestFilter: Ensures that specific logic, such as JWT parsing, user detail loading, and authorization checks, is executed only once per request. This filter helps prevent redundant processing and maintains a consistent security context.
+AuthEntryPointJwt: Handles authentication errors, responding with appropriate HTTP status codes when unauthenticated users attempt to access secured resources.
+Data Access and Repositories:
+
+UserRepository and RoleRepository: Interfaces extending Spring Data JPA's JpaRepository for database interactions, used within controllers to handle user and role data.
+Controllers:
+
+AuthController: Manages signup, login, and logout requests.
+TestController: Provides endpoints for testing role-based access to resources, such as /api/test/all for public access and /api/test/user for authenticated users with specific roles.
+Architecture Overview:
+
+Security Package: Contains classes for configuring and implementing security objects, including WebSecurityConfig, UserDetailsServiceImpl, UserDetailsImpl, AuthEntryPointJwt, AuthTokenFilter, and JwtUtils.
+Controllers: Handle authentication and authorized requests.
+Models: Define the application's main entities, such as User and Role, with a many-to-many relationship.
+Repositories: Interfaces for database operations.
+Payloads: Define request and response objects for the APIs.
+Configuration and Setup:
+
+application.properties: Configures the Spring Datasource, Spring Data JPA, and application-specific properties (e.g., JWT secret, token expiration time).
+Database Setup: Using H2 in-memory or disk-based database with necessary configurations for development and production environments.
+H2 Console: Enabled for database administration and accessible via the configured path.
+JWT and Security Handling:
+
+JwtUtils: Provides methods for generating, parsing, and validating JWT tokens.
+SecurityContext: Used to retrieve the current authenticated user's details.
+Spring Rest Controllers:
+
+AuthController: Manages registration, login, and logout actions.
+TestController: Provides protected endpoints to test authorization based on user roles.
+Additional Details
+Updating from WebSecurityConfigurerAdapter: As WebSecurityConfigurerAdapter is deprecated, the project uses updated practices for configuring Spring Security. Refer to the official Spring documentation for more details.
+
+JWT Cookie Management:
+
+getJwtFromCookies: Retrieves the JWT from cookies.
+generateJwtCookie: Generates a JWT-containing cookie.
+getCleanJwtCookie: Clears the JWT cookie.
+Handling Authentication Exceptions: The project includes mechanisms to handle exceptions thrown during authentication attempts, ensuring appropriate HTTP status codes and responses.
+
+
 # Spring Boot Security Login example with JWT and H2 example
 
 - Appropriate Flow for User Login and Registration with JWT and HttpOnly Cookie
